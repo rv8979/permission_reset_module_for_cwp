@@ -1,0 +1,593 @@
+{% if mod.name != 'softaculous' %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{langene.TITLETAG}}</title>
+    <link href="{{url}}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{url}}/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- Toastr style -->
+    <link href="{{url}}/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <!-- Gritter -->
+    <link href="{{url}}/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+    <link href="{{url}}/css/animate.css" rel="stylesheet">
+    <link href="{{url}}/css/style.css" rel="stylesheet">
+    <link href="{{url}}/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="{{url}}/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+    <link href="{{url}}/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+    {% if mod.name =='phpini_editor' %}
+        <link href="{{url}}/css/plugins/codemirror/codemirror.css" rel="stylesheet">
+        <link href="{{url}}/css/plugins/codemirror/ambiance.css" rel="stylesheet">
+    {% endif %}
+    {% if mod.name =='mail_autoreply' %}
+        <link href="{{url}}/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+        <link href="{{url}}/css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+        <link href="{{url}}/css/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
+        <link href="{{url}}/css/plugins/iCheck/custom.css" rel="stylesheet">
+    {% endif %}
+    {% if mod.name =='crontab' %}
+        <link href="{{url}}/css/plugins/iCheck/custom.css" rel="stylesheet">
+    {% endif %}
+    {% if mod.name =='permi_rv' %}
+        <link href="{{url}}/css/permi_rv.css" rel="stylesheet">
+    {% endif %}
+    {% if mod.name == 'email_accounts' %}
+    <link href="{{url}}/css/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
+    {% endif %}
+    {% if mod.name =='reseller' %}
+        <link href="{{url}}/css/plugins/dualListbox/bootstrap-duallistbox.min.css" rel="stylesheet">
+        <link href="{{url}}/css/plugins/dropzone/basic.css" rel="stylesheet">
+        <link href="{{url}}/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+    {% endif %}
+    <!-- c3 Charts -->
+    <link href="{{url}}/css/plugins/c3/c3.min.css" rel="stylesheet">
+    <link href="{{url}}/css/plugins/chartist/chartist.min.css" rel="stylesheet">
+
+    <link rel="icon" href="{{url}}/img/ico/favicon.ico" type="image/png">
+    {% if mod.name =='Dashboard' %}
+        <link rel="stylesheet" href="{{url}}/font-awesome/css/fontawesome-all.css">
+    {% endif %}
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    {% if mod.html == 'locked_update.html' %}
+                        {% include 'menu_locked.html' %}
+                    {% else %}
+                        {% include 'menu_left.html' %}
+                    {% endif %}
+
+                </ul>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                        <form role="search" class="navbar-form-custom" action="#">
+                            <div class="form-group">
+                                <input type="text" placeholder="{{langene.GNLABEL44}}" class="form-control" name="top-search" id="top-search" autofocus>
+                            </div>
+                        </form>
+                    </div>
+
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <span class="m-r-sm text-muted welcome-message"><i class="fa fa-user" aria-hidden="true"></i> {{users}}</span>
+                        </li>
+                        {% if mod.reseller ==1%}
+                        <li>
+                            <a href="#" class="files_system_lock"><span id="labelreseller" class="label label-primary float-right">{{langene.GNLABEL37}}</span></a>
+                        </li>
+                        {% endif %}
+
+                        {% if mod.fsl == 0 %}
+                            {% set clasefl = 'label-warning' %}
+                            {% set titlefl = langene.FSL_UNLOCKED %}
+                        {% else %}
+                            {% set clasefl = 'label-success' %}
+                            {% set titlefl = langene.FSL_LOCKED %}
+                        {% endif %}
+                        <li>
+                            <a href="#" class="files_system_lock"><span id="imglock" class="label {{clasefl}} float-right">{{titlefl}}</span></a>
+                        </li>
+
+
+                        <li class="dropdown" id="bansw">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <!--i class="fa fa-flag"></i-->
+                                <img src="{{url}}/img/{{lang}}.png" width="20" style="margin-right: 15px">
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts">
+                                {% set sw = 0 %}
+                                {% for key in array_lang %}
+                                    {% if key !='.' and key !='..'%}
+                                        {% if sw == 0 %}
+                                            <li>
+                                                <a href="#">
+                                                    <div>
+                                                        <div class="row">
+                                                            <table class="col-lg-offset-2 col-lg-10">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="radio radio-danger">
+                                                                            {% if key == lang %}
+                                                                                <input type="radio" name="lang" class="radio radio-danger" checked  value="{{key}}" style="margin-top: -10px" onchange="return save_lang()">
+                                                                            {% else %}
+                                                                                <input type="radio" name="lang" class="radio radio-danger"  value="{{key}}" style="margin-top: -10px" onchange="return save_lang()">
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                            <img src="{{url}}/img/{{key}}.png" width="20" style="margin-right: 15px">{{key|capitalize}}
+                                                                    </td>
+                                            {% set sw = 1 %}
+                                        {% elseif sw == 1 %}
+                                                <td style="padding-left: 25px">
+                                                    <div class="radio radio-danger">
+                                                        {% if key == lang %}
+                                                            <input type="radio" name="lang" class="radio radio-danger" checked  value="{{key}}" style="margin-top: -10px" onchange="return save_lang()">
+                                                        {% else %}
+                                                            <input type="radio" name="lang" class="radio radio-danger"  value="{{key}}" style="margin-top: -10px" onchange="return save_lang()">
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <img src="{{url}}/img/{{key}}.png" width="20" style="margin-right: 15px">{{key|capitalize}}
+                                                </td>
+                                                {% set sw = 2 %}
+                                        {% else %}
+                                                <td style="padding-left: 25px">
+                                                    <div class="radio radio-danger">
+                                                        {% if key == lang %}
+                                                            <input type="radio" name="lang" class="radio radio-danger" checked  value="{{key}}" style="margin-top: -10px" onchange="return save_lang()">
+                                                        {% else %}
+                                                            <input type="radio" name="lang" class="radio radio-danger"  value="{{key}}" style="margin-top: -10px" onchange="return save_lang()">
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <img src="{{url}}/img/{{key}}.png" width="20" style="margin-right: 15px">{{key|capitalize}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+            <li class="divider"></li>
+                                            {% set sw = 0 %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if sw == 1 %}
+                                    </tr>
+                                    </table>
+                                    </div>
+                                    </div>
+                                    </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                {% endif %}
+                                {% if sw == 2 %}
+                                    <td width="25%"></td><td width="25%"></td></tr>
+                                    </table>
+                                </div>
+                                </div>
+                                </a>
+                                </li>
+                                <li class="divider"></li>
+                            {% endif %}
+
+                                <!--li>
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-xs" onclick="return save_lang()">{{langene.GNLABEL6}}</button>
+                                    </div>
+                                </li-->
+                            </ul>
+                        </li>
+                        {% if mod.viewtheme == 0 %}
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-gears"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts">
+                                {% for key in array_theme %}
+                                    {% if key !='.' and key !='..' %}
+                                        <li>
+                                            <a href="#">
+                                                <div>
+                                                    <div class="row">
+                                                        <table class="col-lg-offset-1 col-lg-11">
+                                                            <tr>
+                                                                <td><img src="/{{users}}/cwp_theme/{{key}}/img/{{key}}.png" width="100"></td>
+                                                                <td><div>{{key}}</div></td>
+                                                                <td>
+                                                                    <div class="radio radio-danger">
+                                                                        {% if key == theme %}
+                                                                            <input type="radio" name="theme-save" class="radio radio-danger" checked  value="{{key}}" style="margin-top: -10px">
+                                                                        {% else %}
+                                                                            <input type="radio" name="theme-save" class="radio radio-danger"  value="{{key}}" style="margin-top: -10px">
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-xs" id="btn-save-theme">{{langene.PGCHANGTHEME}}</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <a href="#" class="logon" onclick="return logon()">
+                                <i class="fa fa-sign-in-alt"></i> {{langene.BTN_LOGOUT}}
+                            </a>
+                        </li>
+                    </ul>
+                    {% if mod.reseller ==1 %}
+                        <!--h1 class="ribbon">
+                            <strong class="ribbon-content">{{langene.GNLABEL37}}</strong>
+                        </h1-->
+                    {% endif %}
+                </nav>
+            </div>
+            {% include mod.html %}
+        </div>
+    </div>
+    {% include 'modal_tools.html' %}
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="{{url}}/js/jquery-3.1.1.min.js"></script>
+    <script src="{{url}}/js/popper.min.js"></script>
+    <script src="{{url}}/js/bootstrap.js"></script>
+    <script src="{{url}}/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="{{url}}/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    {% if mod.name == 'email_accounts' %}
+    <script src="{{url}}/js/plugins/pwstrength/pwstrength-bootstrap.min.js"></script>
+    <script src="{{url}}/js/plugins/pwstrength/zxcvbn.js"></script>
+    <script src="{{url}}/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+    {% endif %}
+    <!-- Flot -->
+    <script src="{{url}}/js/plugins/flot/jquery.flot.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.time.js"></script>
+    <!-- Peity -->
+    <script src="{{url}}/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="{{url}}/js/demo/peity-demo.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="{{url}}/js/inspinia.js"></script>
+    <script src="{{url}}/js/plugins/pace/pace.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="{{url}}/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- GITTER -->
+    <script src="{{url}}/js/plugins/gritter/jquery.gritter.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="{{url}}/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="{{url}}/js/demo/sparkline-demo.js"></script>
+
+    <!-- ChartJS-->
+    <script src="{{url}}/js/plugins/chartJs/Chart.min.js"></script>
+
+    <!-- Toastr -->
+    <script src="{{url}}/js/plugins/toastr/toastr.min.js"></script>
+
+    <script src="{{url}}/js/plugins/switchery/switchery.js"></script>
+
+    <!-- Ladda -->
+    <script src="{{url}}/js/plugins/ladda/spin.min.js"></script>
+    <script src="{{url}}/js/plugins/ladda/ladda.min.js"></script>
+    <script src="{{url}}/js/plugins/ladda/ladda.jquery.min.js"></script>
+
+    <script src="{{url}}/js/plugins/dataTables/datatables.min.js"></script>
+
+    {% if mod.name =='phpini_editor' %}
+        <script src="{{url}}/js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
+        <script src="{{url}}/js/plugins/codemirror/codemirror.js"></script>
+        <script src="{{url}}/js/plugins/codemirror/mode/javascript/javascript.js"></script>
+    {% endif %}
+    {% if mod.name =='mail_autoreply' %}
+    <script src="{{url}}/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="{{url}}/js/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+    <script src="{{url}}/js/plugins/clockpicker/clockpicker.js"></script>
+    <script src="{{url}}/js/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="{{url}}/js/plugins/iCheck/icheck.min.js"></script>
+    {% endif %}
+    {% if mod.name =='backups' %}
+    <script src="{{url}}/js/plugins/flot/jquery.flot.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="{{url}}/js/plugins/flot/jquery.flot.time.js"></script>
+
+    {% endif %}
+    {% if mod.name =='reseller' %}
+        <script src="{{url}}/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+        <script src="{{url}}/js/plugins/dropzone/dropzone.js"></script>
+    {% endif %}
+    {% if mod.name =='crontab' %}
+        <script src="{{url}}/js/plugins/iCheck/icheck.min.js"></script>
+    {% endif %}
+    {% if mod.name =='Dashboard' %}
+    <script src="{{url}}/js/plugins/d3/d3.min.js"></script>
+    <script src="{{url}}/js/plugins/c3/c3.min.js"></script>
+
+
+    <!-- Flot demo data -->
+    <!--<script src="{{url}}/js/demo/flot-demo.js"></script>-->
+    <!-- Chartist -->
+    <script src="{{url}}/js/plugins/chartist/chartist.min.js"></script>
+    {% endif %}
+    <script>
+        $(document).ready(function() {
+            {% if mod.name !='Dashboard' %}
+                {{ include('/js/dready.js.twig') }}
+            {% else %}
+
+            /*c3.generate({
+                bindto: '#slineChart',
+                data:{
+                    columns: [
+                        ['data1', 0, 10, 15, 30, 30, 33,33,44,55,66,77,88,99,100,110,120,120,120,120,120,120,120,120,120,120,120,120,120,120,120],
+                        ['data2', 7, 20, 27, 35, 45, 50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50]
+                    ],
+                    colors:{
+                        data1: '#1ab394',
+                        data2: '#BABABA'
+                    },
+                    type: 'spline'
+                }
+            });*/
+
+
+                    var data2 = [
+                        [0,1],[1,0],[2,2],[3,0],[4,1],[5,3],[6,1],[7,5],[8,2],[9,3],[10,2],[11,1],[12,0],[13,2],[14,8],[15,0],[16,0]
+                    ];
+                    $("#flot-dashboard-chart").length && $.plot($("#flot-dashboard-chart"), [
+                            data2
+                        ],
+                        {
+                            series: {
+                                lines: {
+                                    show: false,
+                                    fill: true
+                                },
+                                splines: {
+                                    show: true,
+                                    tension: 0.4,
+                                    lineWidth: 1,
+                                    fill: 0.4
+                                },
+                                points: {
+                                    radius: 0,
+                                    show: true
+                                },
+                                shadowSize: 2
+                            },
+                            grid: {
+                                hoverable: true,
+                                clickable: true,
+                                tickColor: "#d5d5d5",
+                                borderWidth: 1,
+                                color: '#d5d5d5'
+                            },
+                            colors: ["#1ab394"],
+                            xaxis:{
+                            },
+                            yaxis: {
+                                ticks: 4
+                            },
+                            tooltip: false
+                        }
+                    );
+
+
+
+
+                    var gf2a={{mod.email_accounts}};
+                    var gf2b={{mod.email_pack}};
+                    var dispemail =(100/gf2b)*(gf2b-gf2a);
+                    var consemail = (100/gf2b)*gf2a;
+                    var doughnutData = {
+                        labels: ["{{langene.DSWLABEL2}}","{{langene.DSWLABLE1}}"],
+                        datasets: [{
+                            data: [Math.round(consemail),Math.round(dispemail)],
+                            backgroundColor: ["#a3e1d4","#dedede"]
+                        }]
+                    } ;
+
+
+                    var doughnutOptions = {
+                        responsive: false,
+                        legend: {
+                            display: false
+                        }
+                    };
+                    var emailg = document.getElementById("doughnutChart").getContext("2d");
+                    new Chart(emailg, {type: 'doughnut', data: doughnutData, options:doughnutOptions});
+
+                    var gf1a={{mod.mysqlpack.package}};
+                    var gf1b={{mod.mysqlpack.used}};
+
+                    var dispmysql =(100/gf1a)*(gf1a-gf1b);
+                    var consmysql = (100/gf1a)*gf1b;
+                    if(gf1a==0){
+                        dispmysql=100;
+                    }
+                    var doughnutData2 = {
+                        labels: ["{{langene.DSWLABEL2}}","{{langene.DSWLABLE1}}" ],
+                        datasets: [{
+                            data: [Math.round(consmysql),Math.round(dispmysql)],
+                            backgroundColor: ["#a3e1d4","#dedede"]
+                        }]
+                    } ;
+                    var mysqlg = document.getElementById("doughnutChart2").getContext("2d");
+                    new Chart(mysqlg, {type: 'doughnut', data: doughnutData2, options:doughnutOptions});
+
+                    var dga={{mod.domain_accounts}};
+                    var dgb={{mod.domain_pack}};
+                    var dispdomain =(100/dgb)*(dgb-dga);
+                    var consdomain = (100/dgb)*dga;
+                    if(dga==0){
+                        dispdomain=100;
+                    }
+                    var doughnutData3 = {
+                        labels: ["{{langene.DSWLABEL2}}","{{langene.DSWLABLE1}}" ],
+                        datasets: [{
+                            data: [Math.round(consdomain),Math.round(dispdomain)],
+                            backgroundColor: ["#a3e1d4","#dedede"]
+                        }]
+                    } ;
+                    var domaing = document.getElementById("doughnutChart3").getContext("2d");
+                    new Chart(domaing, {type: 'doughnut', data: doughnutData3, options:doughnutOptions});
+
+
+                    var gf3a={{mod.ftp_accounts}};
+                    var gf3b={{ (mod.ftp_pack + 0) }};
+                    var dispftp =(100/gf3b)*(gf3b-gf3a);
+                    var consftp = (100/gf3b)*gf3a;
+                    if(gf3a==0){
+                        dispftp=100;
+                    }
+                    if(gf3b>gf3a){
+                        consftp=100;
+                    }
+                    var doughnutData4 = {
+                        labels: ["{{langene.DSWLABEL2}}","{{langene.DSWLABLE1}}" ],
+                        datasets: [{
+                            data: [Math.round(consftp),Math.round(dispftp)],
+                            backgroundColor: ["#a3e1d4","#dedede"]
+                        }]
+                    } ;
+                    var ftpg = document.getElementById("doughnutChart4").getContext("2d");
+                    new Chart(ftpg, {type: 'doughnut', data: doughnutData4, options:doughnutOptions});
+
+                    var gf5a={{mod.subdomain_accounts}};
+                    var gf5b={{ (mod.subdomain_pack+0) }};
+                    var dispsubd =(100/gf5b)*(gf5b-gf5a);
+                    var conssubd = (100/gf5b)*gf5a;
+                    if(gf5a==0){
+                        dispsubd=100;
+                    }
+                    var doughnutData5 = {
+                        labels: ["{{langene.DSWLABEL2}}","{{langene.DSWLABLE1}}" ],
+                        datasets: [{
+                            data: [Math.round(conssubd),Math.round(dispsubd)],
+                            backgroundColor: ["#a3e1d4","#dedede"]
+                        }]
+                    } ;
+                    var subd = document.getElementById("doughnutChart5").getContext("2d");
+                    new Chart(subd, {type: 'doughnut', data: doughnutData5, options:doughnutOptions});
+
+
+            $("#top-search").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                if(value != ''){
+                    $('.searchmenu').addClass('active');
+                    $('.searchmenu ul').addClass('in');
+                    $('.searchmenu ul').css('height','auto');
+                    $("div.float-e-margins").show();
+                    //$('.ibox-content').css('display','block');
+                }else{
+                    $('.searchmenu').removeClass('active');
+                    $('.searchmenu ul').removeClass('in');
+                    $('.searchmenu ul').css('height','0px');
+                    $("div.float-e-margins").show();
+                }
+                $("#side-menu li.searchmenu, #side-menu li.search").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+                $("div.ibox-content div a").filter(function() {
+                    $(this).parent().toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+                $("div.float-e-margins div.ibox-content").each(function(){
+                    var bandera=0;
+                    $(this).find(".col-md-3").each(function(){
+                        //console.log($(this).text());
+                        if(!$(this).is(':hidden') && $(this).text()!=''){
+                            bandera=1;
+                        }
+                    });
+                    //console.log(bandera);
+                    if(bandera==0){
+                        $(this).parent().hide();
+                    }
+                });
+            });
+            {% endif %}
+            $("#pass1").keyup(function() {
+                var color1=0;
+                var color2=0;
+                var color3=0;
+                var color4=0;
+                var classpar='';
+                var msj='';
+                // set password variable
+                var pswd = $(this).val();
+                //validate the length
+                if(pswd.length<8){ color1=0;}else{ color1=1; msj=msj+' largo 1';  }
+                //validate letter
+                if(pswd.match(/[A-z]/gi)){color2=1; msj=msj+' letras 1'; }else{ color2=0;}
+                //validate capital letter
+                if(pswd.match(/[A-Z]/gi)){ msj=msj+' Mayusculas 1'; color3=1; } else { color3=0; }
+                //validate number
+                if (pswd.match(/[0-9]/gi)){color4=1; msj=msj+' Numeros 1';}else{  color4=0; }
+                newvalidpass($("#pass1").val(),$("#pass2").val());
+                var sum=(color1+color2+color3+color4);
+                //alert(sum+' M:'+msj);
+                if(sum==0){ classpar='progress-bar-danger';}
+                if(sum==1){ classpar='progress-bar-warning';}
+                if(sum==2){ classpar='progress-bar-danger';}
+                if(sum==3){ classpar='progress-bar-info';}
+                if(sum==4){ classpar='progress-bar-success';}
+                var barra='<div class="progress-bar '+classpar+'" style="width: '+((pswd.length)*10)+'%;"></div>';
+                $("#progresspass").html(barra);
+            });
+        });
+        //****** INCLUDOS JS MOD /js/modules/{{mod.name}}.js.twig *****///
+        {% if mod.name !='' %}
+            /////-----///
+            {% include("/js/modules/"~ mod.name ~".js.twig") %}
+            /////-----///
+        {% endif %}
+
+
+        {{ include('/js/cwp.js.twig') }}
+
+    </script>
+</body>
+</html>
+{% endif %}

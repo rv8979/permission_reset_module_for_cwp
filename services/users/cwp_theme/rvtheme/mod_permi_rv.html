@@ -1,0 +1,48 @@
+<!-- for header-->
+<div class="row  border-bottom white-bg dashboard-header">
+    {% if mod.fsl == 1 %} {% set stflalert ='block' %} {% else %} {% set stflalert ='none' %} {% endif %}
+    <div class="row  alert alert-warning col-lg-12" style="margin-left: 5px; padding-right: 5px;display:{{stflalert}}"
+        id="alertfl">
+        <strong>{{langene.GALARTFILEBLOCK}}. Please unlock file system</strong>
+    </div>
+    <div class="col-lg-10">
+        <h2>Permission Reset ({{users}})</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="?">Home</a></li>
+            <li class="breadcrumb-item active"><strong>Permission Reset</strong></li>
+        </ol>
+    </div>
+</div>
+<!--stop header-->
+
+<!--dash board panel-->
+<!--/////////////////////////////////////////-->
+{% if mod.fsl != 1 %}
+<div class="row">
+    <div class="box-l1">
+        <p style="font-weight:bold">Fix invalid permission on all files and directory in public_html. 644 for files and 755 for directory</p>
+
+        <div class="col-lg-12">
+            <div>User Name: <span style="color:red">{{mod.u_name}}</span></div>
+            <br>
+            <div>User Home Dir: <span style="color:red">{{mod.h_dir}}/public_html</span> </div>
+            <br>
+            <div>Logs:
+                <pre style="height: 400px">{{mod.log}}</pre>
+            </div>
+        </div>
+        <p>{{mod.test}}</p>
+        <form method="post">
+            <input type="submit" name="reset_btn" value="Reset" class="btn_rv_a" />
+        </form>
+    </div>
+</div>
+{% endif %}
+<!--/////////////////////////////////////////-->
+<!--stop dash board panel-->
+
+<!-- footer-->
+<div class="wrapper wrapper-content" style="margin-top: 35px">
+    {% include 'footer.html' %}
+</div>
+<!--stop footer-->

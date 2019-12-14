@@ -1,0 +1,85 @@
+#
+# Centos web panel module by Raghav (raghav.chauhan78@gmail.com)
+# this module use for reset account permission from command and client web panel 
+
+# help menu
+help_f() {
+    echo " "
+    echo "Client user Permission reset module for CWP"
+    echo "Reset all permission on public_html Dir "
+    echo " "
+    echo "Examples:"
+    echo "    ${0##*/} username"
+    echo "    ${0##*/} alex"
+    echo "    ${0##*/} smith"
+    echo " "
+    echo "online help and source code https://github.com/rv8979/modulename "
+    exit 0
+}
+# find user in mysql db function
+# this function work only when root user login
+user_db() {
+    mysql root_cwp -B -N -s -e "SELECT username FROM user" | while read -r line; do
+        echo "$line"
+    done
+}
+
+# User verifaction function
+user_verfy() {
+    echo "FInd user ID: $1"
+    # check user from 'id -u username'
+    id -u $1
+
+    if [ $? -eq 1 ]; then
+        echo "user not found"
+        echo "Script exit"
+        exit 1
+    fi
+
+    echo " "
+
+#    checking user from db
+#    this function work ony when root user login 
+#    echo "Verify User name in CWP Database: $1"
+#    user_db | grep -w $1
+
+#    if [ $? -eq 1 ]; then
+#        echo "this user is not CWP User. Please enter valid CWP user"
+#        echo "Script exit"
+#        exit 1
+#    fi
+#    echo " "
+    # findi user home dir path
+
+    home_dir=$(awk -F: -v v="$1" '{if ($1==v) print $6}' /etc/passwd)
+
+    # finding public_html path
+
+    if [ ! -d "$home_dir/public_html" ]; then
+        echo "$home_dir/public_html does not exist"
+        echo "Script exit"
+        exit 1
+    fi
+    main_f $1
+}
+
+main_f() {
+    echo "Reseting Permission: $1"
+    echo " "
+    cd $home_dir
+    chown -Rv $1:$1 public_html
+    chown -v $1:nobody public_html
+    # find command run
+    cd public_html
+    find . -type f -exec chmod -v 644 {} \;
+    find . -type d -exec chmod -v 755 {} \;
+    exit 0
+
+}
+
+if [ $# -eq 1 ]; then
+    user_verfy $1
+else
+    help_f
+fi
+
