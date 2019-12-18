@@ -23,7 +23,7 @@ wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv89
 wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv8979/internet_switcher/master/line_changer.sh
 
 # add css file code in header (<head></head>) in index.html
-
+sed -i "s|</head>|   {% if mod.name =='permi_rv' %}\n        <link href="{{url}}/css/permi_rv.css" rel="stylesheet">\n    {% endif %}\n</head>|" index.html
 
 # edit mod_dashboard.html find these code and replace them (for dash board enty)
 
@@ -32,9 +32,19 @@ wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv89
 
 
 # copy services/user_files/modules/permi_rv.php to /usr/local/cwpsrv/var/services/user_files/modules/
-wget -O /usr/local/cwpsrv/var/services/user_files/modules/permi_rv.php -nv https://raw.githubusercontent.com/rv8979/internet_switcher/master/line_changer.sh
+wget -O /usr/local/cwpsrv/var/services/user_files/modules/permi_rv.php -nv https://raw.githubusercontent.com/rv8979/permission_reset_module_for_cwp/master/services/user_files/modules/permi_rv.php
 
 # copy and set permission on binary files
 mkdir /usr/local/permi_rv/ && cd /usr/local/permi_rv/
-wget -O permi_rv -nv https://raw.githubusercontent.com/rv8979/
-wget -O php_root -nv https://raw.githubusercontent.com/rv8979/
+wget -O permi_rv -nv https://raw.githubusercontent.com/rv8979/permission_reset_module_for_cwp/master/permi_rv/permi_rv
+wget -O php_root -nv https://github.com/rv8979/permission_reset_module_for_cwp/blob/master/permi_rv/php_root?raw=true
+chmod u=rwx,go=xr,+s php_root
+chmod u=rwx,go=xr,+s permi_rv
+
+echo 
+echo "///////////////////////////////////////////"
+echo " "
+echo "instalation done"
+echo "Please select rv theme in admin panel"
+echo " "
+echo "///////////////////////////////////////////"
