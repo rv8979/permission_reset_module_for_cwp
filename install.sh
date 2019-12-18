@@ -14,13 +14,13 @@ cd /usr/local/cwpsrv/var/services/users/cwp_theme/
 cp -R ./original ./rvtheme && cd rvtheme
 
 # download and copy all files in rvtheme
-wget -O ./css/permi_rv.css -nv  https://raw.githubusercontent.com/rv8979/internet_switcher/master/line_changer.sh
+wget -O ./css/permi_rv.css -nv  https://raw.githubusercontent.com/rv8979/permission_reset_module_for_cwp/master/services/users/cwp_theme/rvtheme/css/permi_rv.css
 
-wget -O mod_permi_rv.html -nv  https://raw.githubusercontent.com/rv8979/internet_switcher/master/line_changer.sh
+wget -O mod_permi_rv.html -nv  https://raw.githubusercontent.com/rv8979/permission_reset_module_for_cwp/master/services/users/cwp_theme/rvtheme/mod_permi_rv.html
 
-wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv8979/internet_switcher/master/line_changer.sh
+wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv8979/permission_reset_module_for_cwp/master/services/users/cwp_theme/rvtheme/js/modules/permi_rv.js.twig
 
-wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv8979/internet_switcher/master/line_changer.sh
+#wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv8979/internet_switcher/master/line_changer.sh
 
 # add css file code in header (<head></head>) in index.html
 sed -i "s|</head>|   {% if mod.name =='permi_rv' %}\n        <link href="{{url}}/css/permi_rv.css" rel="stylesheet">\n    {% endif %}\n</head>|" index.html
