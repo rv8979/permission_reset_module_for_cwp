@@ -1,4 +1,4 @@
-#!/binbash
+#!/bin/bash
 # centos web panel module
 #
 
