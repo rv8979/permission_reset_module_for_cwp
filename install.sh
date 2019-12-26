@@ -26,9 +26,23 @@ wget -O ./js/modules/permi_rv.js.twig -nv https://raw.githubusercontent.com/rv89
 sed -i "s|</head>|   {% if mod.name =='permi_rv' %}\n        <link href="{{url}}/css/permi_rv.css" rel="stylesheet">\n    {% endif %}\n</head>|" index.html
 
 # edit mod_dashboard.html find these code and replace them (for dash board enty)
+sed -i 's|{% if (("files_system_lock" in rmenu )or("clam" in rmenu )or("fileManager2" in rmenu )or("ftp_accounts" in rmenu )or("backups" in rmenu )or ("protected_directory" in rmenu ))or(swmenu==1) %}|{% if (("files_system_lock" in rmenu )or("clam" in rmenu )or("fileManager2" in rmenu )or("ftp_accounts" in rmenu )or("backups" in rmenu )or("permi_rv" in rmenu )or ("protected_directory" in rmenu ))or(swmenu==1) %}|' mod_dashboard.html
 
+#
+sed -i 's!<div class="col-md-3" style="padding-bottom: 20px"><a href="?module=backups"><i class="fa fa-cloud fa-3x"></i>   {{langene.BACKUP}}</a></div>!<div class="col-md-3" style="padding-bottom: 20px"><a href="?module=backups"><i class="fa fa-cloud fa-3x"></i>   {{langene.BACKUP}}</a></div> \
+                                {% endif %} \
+                                {% if ("permi_rv" in rmenu )or(swmenu==1) %} \
+                                    <div class="col-md-3" style="padding-bottom: 20px"><a href="?module=permi_rv"><i class="fas fa-save fa-3x"></i>   Permission Reset</a></div>!g' mod_dashboard.html
 
 # edit menu_left.html and find and replace code (for left menu enty)
+sed -i 's|{% if (("files_system_lock" in rmenu )or("clam" in rmenu )or("fileManager2" in rmenu )or("ftp_accounts" in rmenu )or("backups" in rmenu )or ("protected_directory" in rmenu ))or(swmenu==1) %}|{% if (("files_system_lock" in rmenu )or("clam" in rmenu )or("fileManager2" in rmenu )or("ftp_accounts" in rmenu )or("backups" in rmenu )or("permi_rv" in rmenu )or ("protected_directory" in rmenu ))or(swmenu==1) %}|' menu_left.html
+
+#
+
+sed -i 's!<li class="search"><a href="?module=backups">{{langene.BACKUP}}</a></li>!<li class="search"><a href="?module=backups">{{langene.BACKUP}}</a></li> \
+        {% endif %} \
+        {% if ("permi_rv" in rmenu )or(swmenu==1) %} \
+        <li class="search"><a href="?module=permi_rv">Permission Reset</a></li>!' menu_left.html
 
 
 # copy services/user_files/modules/permi_rv.php to /usr/local/cwpsrv/var/services/user_files/modules/
