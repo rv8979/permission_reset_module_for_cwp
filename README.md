@@ -1,5 +1,11 @@
 # Permission reset module for cwp
 
+This module work for [centos web panel](http://centos-webpanel.com/). fix all permissions without using root user. 
+
+
+Fix invalid permission on all files and directory in public_html. 644 for files and 755 for directory.
+
+
 
 ## Installation
 Go to terminal and login as root. Execute following commands for installation 
