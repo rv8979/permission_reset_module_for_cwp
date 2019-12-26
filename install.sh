@@ -1,6 +1,8 @@
 #!/bin/bash
+
 # centos web panel module
-#
+# raghav.chauhan78@gmail.com
+# https://github.com/rv8979/permission_reset_module_for_cwp
 
 # check root user
 if [[ $EUID -ne 0 ]]; then
