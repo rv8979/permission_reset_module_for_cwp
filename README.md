@@ -16,7 +16,9 @@ chmod +x install.sh
 
 After installation has been completed then select theme (rvtheme) from client admin panel
 
-if you want set force fully for all client then g
+Set theme forcefully for all clients
+go to User Accounts >> Features,Themes,Languages >> Themes
+and select "rvtheme"
 
 
 ## License
