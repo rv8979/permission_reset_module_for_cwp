@@ -14,5 +14,10 @@ chmod +x install.sh
 ./install.sh
 ```
 
+After installation has been completed then select theme (rvtheme) from client admin panel
+
+if you want set force fully for all client then g
+
+
 ## License
 [MIT](https://github.com/rv8979/permission_reset_module_for_cwp/blob/master/LICENSE)
